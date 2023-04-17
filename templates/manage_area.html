@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="well text-center">
+
+        <h1>Manage Area</h1>
+
+        </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="row">
+   
+          <div class="col md-12">
+   
+   
+   
+              <h3>Area List <button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add Area</button></h3>
+         
+              <table class="table table-striped">
+   
+   
+                 <tr>
+                  <th scope="col">Area Id</th>
+						<th scope="col">Program Id</th>
+						<th scope="col">Area</th>
+						
+                  <th scope="col">Operations</th>
+                 </tr>
+   
+                 {% for row in areas %}
+                <tr>
+                    <td>{{row['area_id']}}</td>
+                    <td>{{row['prog_id']}}</td>
+                    <td>{{row['area']}}</td>
+                 
+                 
+                    
+                    <td>
+                  
+                       <a href="/update_area/{{row['area_id']}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row['area_id']}}">Edit</a>
+                       <a href="/delete_area/{{row['area_id']}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                    </td>
+                 </tr>
+   
+                 <div id="modaledit{{row['area_id']}}" class="modal fade" role="dialog">
+                   <div class="modal-dialog">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                        
+                           <button type="button" class="close" data-dismiss="modal">&times;</button>
+                           <h4 class="modal-title">Update Area</h4>
+            
+            
+                          </div>
+            
+                        <div class="modal-body">
+            
+                           <form action="{{ url_for('edit_area') }}" method="POST">
+            
+                              <div class="form-group">
+                                 <label>Area Name:</label>
+                                 <input type="hidden"  name="area_id" value="{{row['area_id']}}">
+            
+                                 <input type="text" class="form-control" name="area" value="{{row['area']}}">
+         
+                              </div>
+            
+                    
+                              <div class="form-group">
+                                 <label>Program Id:</label>
+                               <input type="text" class="form-control" name="prog_id" value="{{row['prog_id']}}"> 
+                              </div>
+   
+                              
+            
+                           <div class="form-group">
+                              <button class="btn btn-primary" type="submit">Update</button>
+                           </div>
+   
+                           </form>
+         
+                        </div>
+            
+            
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+            
+            
+                     </div>
+            
+            
+                  </div>
+            
+            
+                 </div>
+
+                 {% endfor  %}
+
+
+               </tbody>
+
+
+           </table>
+
+                 <div id="myModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                       
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Add Area</h4>
+           
+           
+                         </div>
+
+                  
+           
+                       <div class="modal-body">
+           
+                        <form action="{{ url_for('add_area') }}" method="POST">
+           
+                             <div class="form-group">
+                                <label>Area Name:</label>
+                                <input type="hidden"  name="area_id">
+           
+                                <input type="text" class="form-control" name="area">
+        
+                             </div>
+           
+                   
+                             <div class="form-group">
+                                <label>Program Id:</label>
+                              <input type="text" class="form-control" name="prog_id"> 
+                             </div>
+  
+                             
+           
+                          <div class="form-group">
+                             <button class="btn btn-primary" type="submit">Add</button>
+                          </div>
+  
+                          </form>
+        
+                       </div>
+           
+           
+                       <div class="modal-footer">
+                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                       </div>
+           
+           
+                    </div>
+           
+           
+                 </div>
+           
+           
+                </div>
+     </div>
+   </div>    
+   
+    </div>
+
+    <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+
+   </body>
+
+
+
