@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
 
@@ -13,9 +14,6 @@ db_config = {
     'cursorclass': pymysql.cursors.DictCursor
 }
 
-# Hardcoded User Credentials
-USERNAME = "admin"
-PASSWORD = "password"
 
 # define a route to display the employee table
 @app.route("/")
@@ -403,5 +401,51 @@ def login_auth():
 def update():
     return redirect(url_for('manage_employee'))
 
+
+#add Bugs Page
+@app.route('/search_bug', methods=['GET', 'POST'])
+def search_bug():
+    if request.method == 'POST':
+        program = request.form.get('program')
+        report_type = request.form.get('report_type')
+        severity = request.form.get('severity')
+        problem_summary = request.form.get('problem_summary')
+        reproducible = request.form.get('reproducible')
+        problem = request.form.get('problem')
+        reported_by = request.form.get('reported_by')
+        date_reported = request.form.get('date_reported')
+        functional_area = request.form.get('functional_area')
+        assigned_to = request.form.get('assigned_to')
+        comments = request.form.get('comments')
+        status = request.form.get('status')
+        priority = request.form.get('priority')
+        resolution = request.form.get('resolution')
+        resolution_version = request.form.get('resolution_version')
+        resolved_by = request.form.get('resolved_by')
+        date_resolved = request.form.get('date_resolved')
+        tested_by = request.form.get('tested_by')
+        treat_as = request.form.get('treat_as')
+        
+        # process the form data and store it in the database using PL/SQL
+        
+        # redirect to a success page
+        return render_template('add_bug_success.html')
+    
+    # if the request method is GET, render the add_bug page with the necessary form data
+    programs = ['program1', 'program2', 'program3'] # replace with actual program list
+    report_types = ['coding error', 'design error', 'hardware error', 'suggestion']
+    severities = ['fatal', 'severe', 'minor']
+    employees = ['employee1', 'employee2', 'employee3'] # replace with actual employee list
+    areas = ['area1', 'area2', 'area3'] # replace with actual area list
+    
+    return render_template('search_bug_page.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas)
+
+# export data
+@app.route('/export_data')
+def export_data():
+    return render_template('export_data.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+
