@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New Bug Report Entry Page</title>
+        <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+    
+      </head>
+<body>
+    <div class="container">
+        <div class="well text-center">
+  
+          <h1>New Bug Report Entry Page</h1>
+  
+          </div>
+      </div>
+
+	<div class="container">
+        <form action="{{ url_for('add_bug') }}" method="POST">
+        
+        <div class="col-sm-12">
+            <div class="col-sm-4">
+                <label for="program">Program:</label>
+                <select id="program" name="program" class ="form-control">
+                    {% for program in programs %}
+                        <option value="{{ program}}">{{ program}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-sm-4">
+                <label for="report_type">Report Type:</label>
+                <select id="report_type" name="report_type" class ="form-control">
+                    {% for report_type in report_types %}
+                        <option value="{{ report_type }}">{{ report_type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="severity">Severity:</label>
+                    <select name="severity" id="severity" class ="form-control">
+                      {% for severity in severities %}
+                        <option value="{{ severity }}">{{ severity }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+            </div>
+            
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="problemSummary">Problem Summary:</label>
+                <input type="text" name="problemSummary" id="problemSummary" class="form-control">
+              </div>
+            </div>
+              
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="reproducible">Reproducible:</label>
+                <select name="reproducible" id="reproducible" class="form-control">
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+            </div>
+
+        
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="problem">Problem:</label>
+                <textarea name="problem" id="problem" class="form-control"></textarea>
+              </div>
+            </div>
+    
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="reportedBy">Reported By:</label>
+                <select name="reportedBy" id="reportedBy" class="form-control">
+                  {% for employee in employees %}
+                    <option value="{{ employee.employeeid }}">{{ employee.firstname }} {{ employee.lastname }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" name="date" id="date" class="form-control">
+              </div>
+            </div>
+        
+        </div>
+    
+        <div class="col-sm-12">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="functionalArea">Functional Area:</label>
+                <select name="functionalArea" id="functionalArea" class="form-control">
+                  {% for area in areas %}
+                    <option value="{{ area.areaid }}">{{ area.areaname }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              </div>
+    
+              <div class="col-sm-3">
+              <div class="form-group">
+                <label for="assignedTo">Assigned To:</label>
+                <select name="assignedTo" id="assignedTo" class="form-control">
+                  {% for employee in employees %}
+                    <option value="{{ employee.employeeid }}">{{ employee.firstname }} {{ employee.lastname }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              </div>
+    
+              <div class="col-sm-12">
+              <div class="form-group">
+                <label for="comments">Comments:</label>
+                <textarea name="comments" id="comments" class="form-control"></textarea>
+              </div>
+              </div>
+    
+              <div class="col-sm-3">
+              <label for="status">Status:</label>
+            <select id="status" name="status" class="form-control">
+                {% for s in status %}
+                    <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+             </div>  
+            
+             <div class="col-sm-3">
+            <label for="priority">Priority:</label>
+            <select id="priority" name="priority" class="form-control">
+                {% for p in priority %}
+                    <option value="{{ p }}">{{ p }}</option>
+                {% endfor %}
+            </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="priority">Resolution:</label>
+                <select id="priority" name="priority" class="form-control">
+                    {% for p in priority %}
+                        <option value="{{ p }}">{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="priority">Resolution  Version:</label>
+                <select id="priority" name="priority" class="form-control">
+                    {% for p in priority %}
+                        <option value="{{ p }}">{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="priority">Resolution  by:</label>
+                <select id="priority" name="priority" class="form-control">
+                    {% for p in priority %}
+                        <option value="{{ p }}">{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" name="date" id="date" class="form-control">
+                  </div>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="priority">Tested  by:</label>
+                <select id="priority" name="priority" class="form-control">
+                    {% for p in priority %}
+                        <option value="{{ p }}">{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" name="date" id="date" class="form-control">
+                  </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12"></div>
+        <input type="submit" value="Submit">
+		<input type="reset" value="Reset">
+		<a href="/dashboard">Cancel</a>
+    </div>
+
+        </form>
+    </div>
+
+</body>
+

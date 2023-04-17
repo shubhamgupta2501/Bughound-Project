@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="well text-center">
+
+        <h1>Manage Area</h1>
+
+        </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="row">
+   
+          <div class="col md-12">
+   
+   
+   
+              <h3>Area List <button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add Area</button></h3>
+         
+              <table class="table table-striped">
+   
+   
+                 <tr>
+                  <th scope="col">Area Id</th>
+						<th scope="col">Program Id</th>
+						<th scope="col">Name</th>
+						<th scope="col">Release</th>
+						<th scope="col">Version</th>
+                  <th scope="col">Operations</th>
+                 </tr>
+   
+                 <tr>
+                  <td>01</td>
+						<td>12</td>
+						<td>GUI Editor</td>
+						<td>1</td>
+						<td>2</td>
+                    <td>
+                       <a href="#modaledit" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit">Edit</a>
+                       <a href="/delete/" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                    </td>
+                 </tr>
+   
+                 <div id="modaledit" class="modal fade" role="dialog">
+                   <div class="modal-dialog">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                        
+                           <button type="button" class="close" data-dismiss="modal">&times;</button>
+                           <h4 class="modal-title">Update Area</h4>
+            
+            
+                          </div>
+            
+                        <div class="modal-body">
+            
+                            <form>
+            
+                              <div class="form-group">
+                                 <label>Area Name:</label>
+                                 <input type="hidden"  name="id">
+            
+                                 <input type="text" class="form-control" name="name">
+         
+                              </div>
+            
+                    
+                              <div class="form-group">
+                                 <label>Release:</label>
+                               <input type="text" class="form-control" name="email"> 
+                              </div>
+   
+                              <div class="form-group">
+                                 <label>Version:</label>
+                               <input type="text" class="form-control" name="email"> 
+                              </div>
+            
+                           <div class="form-group">
+                              <button class="btn btn-primary" type="sbumit">Update</button>
+                           </div>
+   
+                           </form>
+         
+                        </div>
+            
+            
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+            
+            
+                     </div>
+            
+            
+                  </div>
+            
+            
+                 </div>
+
+                 <div id="myModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                       
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Add Area</h4>
+           
+           
+                         </div>
+           
+                       <div class="modal-body">
+           
+                           <form>
+           
+                             <div class="form-group">
+                                <label>Area Name:</label>
+                                <input type="hidden"  name="id">
+           
+                                <input type="text" class="form-control" name="name">
+        
+                             </div>
+           
+                   
+                             <div class="form-group">
+                                <label>Release:</label>
+                              <input type="text" class="form-control" name="email"> 
+                             </div>
+  
+                             <div class="form-group">
+                                <label>Version:</label>
+                              <input type="text" class="form-control" name="email"> 
+                             </div>
+           
+           
+                          <div class="form-group">
+                             <button class="btn btn-primary" type="sbumit">Add</button>
+                          </div>
+  
+                          </form>
+        
+                       </div>
+           
+           
+                       <div class="modal-footer">
+                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                       </div>
+           
+           
+                    </div>
+           
+           
+                 </div>
+           
+           
+                </div>
+     </div>
+   </div>    
+   
+    </div>
+
+    <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+
+   </body>
+
+
+
