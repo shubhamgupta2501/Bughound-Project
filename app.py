@@ -118,6 +118,11 @@ def manage_program():
 def manage_area():
     return render_template('manage_area.html')
 
+# manage area page
+@app.route('/export_data')
+def export_data():
+    return render_template('export_data.html')
+
 # Login Authentication
 @app.route('/', methods=['POST'])
 def login_auth():

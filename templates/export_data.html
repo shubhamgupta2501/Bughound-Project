@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New Bug Report Entry Page</title>
+        <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+    
+      </head>
+<body>
+    <div class="container">
+        <div class="well text-center">
+  
+          <h1>Export Data</h1>
+  
+        </div>
+    </div>
+
+	<div class="container">
+    <form action="{{ url_for('export_data') }}" method="POST">
+      <label for="table_name">Table Name:</label><br>
+      <select id="table_name" name="table_name" class ="form-control">
+        <option value="employees">Employees</option>
+        <option value="programs">Programs</option>
+        <option value="areas">Areas</option>
+        <option value="bugs">Bugs</option>
+      </select><br><br>
+      <select id="data_type" name="data_type" class ="form-control">
+        <option value="ascii">ASCII</option>
+        <option value="xml">XML</option>
+      </select><br><br>
+      <input type="submit" value="Export">
+    </form>
+  </div>
+
+</body>
+
