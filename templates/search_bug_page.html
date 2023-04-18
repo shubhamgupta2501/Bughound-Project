@@ -15,21 +15,23 @@
       </div>
 
 	<div class="container">
-        <form action="{{ url_for('add_bug') }}" method="POST">
+        <form action="{{ url_for('search_bug') }}" method="POST">
         
         <div class="col-sm-12">
-            <div class="col-sm-12">
-                <label for="program">Program:</label>
-                <select id="program" name="program" class ="form-control">
-                    {% for program in programs %}
-                        <option value="{{ program}}">{{ program}}</option>
-                    {% endfor %}
-                </select>
-            </div>
+          <div class="col-sm-12">
+            <label for="program">Program:</label>
+            <select id="program" name="program" class ="form-control">
+              <option value='ALL' disabled selected>ALL</option>
+                {% for program in programs %}
+                    <option value="{{ program['program']}}">{{ program['program']}}</option>
+                {% endfor %}
+            </select>
+        </div>
             
             <div class="col-sm-12">
                 <label for="report_type">Report Type:</label>
                 <select id="report_type" name="report_type" class ="form-control">
+                  <option value='ALL' disabled selected>ALL</option>
                     {% for report_type in report_types %}
                         <option value="{{ report_type }}">{{ report_type }}</option>
                     {% endfor %}
@@ -40,6 +42,7 @@
                 <div class="form-group">
                     <label for="severity">Severity:</label>
                     <select name="severity" id="severity" class ="form-control">
+                      <option value='ALL' disabled selected>ALL</option>
                       {% for severity in severities %}
                         <option value="{{ severity }}">{{ severity }}</option>
                       {% endfor %}
@@ -50,23 +53,26 @@
         </div>
     
         <div class="col-sm-12">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="functional_area">Functional Area:</label>
+              <select name="functional_area" id="functional_area" class="form-control">
+                
+                <option value='ALL' disabled selected>ALL</option>
+                {% for area in areas %}
+                  <option value="{{ area['area'] }}">{{ area['area'] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            </div>
+    
             <div class="col-sm-12">
               <div class="form-group">
-                <label for="functionalArea">Functional Area:</label>
-                <select name="functionalArea" id="functionalArea" class="form-control">
-                  {% for area in areas %}
-                    <option value="{{ area.areaid }}">{{ area.areaname }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              </div>
-    
-              <div class="col-sm-12">
-              <div class="form-group">
-                <label for="assignedTo">Assigned To:</label>
-                <select name="assignedTo" id="assignedTo" class="form-control">
+                <label for="assigned_to">Assigned To:</label>
+                <select name="assigned_to" id="assigned_to" class="form-control">
+                  <option value='ALL' disabled selected>ALL</option>
                   {% for employee in employees %}
-                    <option value="{{ employee.employeeid }}">{{ employee.firstname }} {{ employee.lastname }}</option>
+                    <option value="{{ employee['name'] }}">{{ employee['name'] }} {{ employee.lastname }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -74,25 +80,22 @@
 
               <div class="col-sm-12">
                 <div class="form-group">
-                  <label for="reportedBy">Reported By:</label>
-                  <select name="reportedBy" id="reportedBy" class="form-control">
+                  <label for="reported_by">Reported By:</label>
+                  <select name="reported_by" id="reported_by" class="form-control">
+                    <option value='ALL' disabled selected>ALL</option>
                     {% for employee in employees %}
-                      <option value="{{ employee.employeeid }}">{{ employee.firstname }} {{ employee.lastname }}</option>
+                      <option value="{{ employee['name'] }}">{{ employee['name'] }} {{ employee.lastname }}</option>
                     {% endfor %}
                   </select>
                 </div>
               </div>
     
-              <div class="col-sm-12">
-              <div class="form-group">
-                <label for="comments">Comments:</label>
-                <textarea name="comments" id="comments" class="form-control"></textarea>
-              </div>
-              </div>
+              
     
               <div class="col-sm-12">
               <label for="status">Status:</label>
             <select id="status" name="status" class="form-control">
+              <option value='ALL' disabled selected>ALL</option>
                 {% for s in status %}
                     <option value="{{ s }}">{{ s }}</option>
                 {% endfor %}
@@ -102,20 +105,43 @@
              <div class="col-sm-12">
             <label for="priority">Priority:</label>
             <select id="priority" name="priority" class="form-control">
+              <option value='ALL' disabled selected>ALL</option>
                 {% for p in priority %}
                     <option value="{{ p }}">{{ p }}</option>
                 {% endfor %}
             </select>
             </div>
 
-            <div class="col-sm-12">
-                <label for="priority">Resolution:</label>
-                <select id="priority" name="priority" class="form-control">
-                    {% for p in priority %}
-                        <option value="{{ p }}">{{ p }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <div class="col-sm-3">
+              <label for="resolution">Resolution:</label>
+              <select id="resolution" name="resolution" class="form-control">
+                <option value='ALL' disabled selected>ALL</option>
+                {% for r in resolution %}
+                <option value="{{ r }}">{{ r }}</option>
+              {% endfor %}
+              </select>
+          </div>
+
+          <div class="col-sm-3">
+            <label for="resolution_by">Resolution  by:</label>
+            <select id="resolution_by" name="resolution_by" class="form-control">
+              <option value='ALL' disabled selected>ALL</option>
+              {% for employee in employees %}
+              <option value="{{ employee['name'] }}">{{ employee['name'] }} {{ employee.lastname }}</option>
+            {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="date_reported">Date Reported:</label>
+            <input type="date" name="date_reported" id="date_reported" class="form-control">
+          </div>
+        </div>
+
+
+
+
         </div>
 
         <div class="col-sm-12"></div>

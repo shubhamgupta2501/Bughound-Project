@@ -1,0 +1,66 @@
+program: Visual Ada95
+report_type: coding error
+severity: severe
+problem_summary: www
+reproducible: 0
+problem: ss
+reported_by: Hannah
+date_reported: 2023-04-04
+functional_area: Parser
+assigned_to: Johann Gomblepuddy
+comments: wde
+status: Open
+priority: 4
+resolution: Need more info
+resolution_version: 3
+resolution_by: Hannah
+date_resolved: 2023-04-11
+tested_by: Chels k
+bug_id: 1
+prog_id: 13
+area_id: 26
+
+program: Skyrim 4
+report_type: coding error
+severity: fatal
+problem_summary: qqq
+reproducible: 0
+problem: sww
+reported_by: Timmy
+date_reported: 2023-04-04
+functional_area: Lexer
+assigned_to: Hannah
+comments: sss
+status: Open
+priority: 3
+resolution: Withdrawn by reporter
+resolution_version: 1
+resolution_by: Johann Gomblepuddy
+date_resolved: 2023-04-11
+tested_by: Johann Gomblepuddy
+bug_id: 4
+prog_id: 11
+area_id: 25
+
+program: Mapstar 7
+report_type: hardware error
+severity: severe
+problem_summary: ddd
+reproducible: 0
+problem: ggg
+reported_by: Timmy
+date_reported: 2023-04-03
+functional_area: Lexer
+assigned_to: Johann Gomblepuddy
+comments: ppp
+status: Closed
+priority: 5
+resolution: As designed
+resolution_version: 2
+resolution_by: Hannah
+date_resolved: 2023-04-03
+tested_by: Prakash
+bug_id: 5
+prog_id: 18
+area_id: 25
+

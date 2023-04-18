@@ -1,0 +1,30 @@
+emp_id: 2
+name: Timmy
+username: timmy!
+password: 123
+userlevel: 3
+
+emp_id: 4
+name: Hannah
+username: smith
+password: 789
+userlevel: 2
+
+emp_id: 5
+name: Johann Gomblepuddy
+username: johanng
+password: 111
+userlevel: 2
+
+emp_id: 8
+name: Prakash
+username: smithp
+password: 444
+userlevel: 2
+
+emp_id: 1000
+name: Chels k
+username: chelfer
+password: 123
+userlevel: 1
+

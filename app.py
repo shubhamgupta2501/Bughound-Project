@@ -1,5 +1,6 @@
 
 from flask import Flask, render_template, request, redirect, session, url_for
+from xml.etree.ElementTree import Element, SubElement, ElementTree
 import pymysql.cursors
 
 app = Flask(__name__)
@@ -117,11 +118,18 @@ def add_area():
         
         connection = pymysql.connect(**db_config)
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id))
+            cursor.execute("SELECT COUNT(*) FROM programs")
+            result = cursor.fetchone()
+            print(result['COUNT(*)'])
             connection.commit()
-            prog_id = cursor.lastrowid
-            message = f"Area with name {area} was successfully added."
-        
+            if result['COUNT(*)'] == 0:
+                print("Cannot add area - programs table is empty.")
+            else:
+                cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id))
+                connection.commit()
+                prog_id = cursor.lastrowid
+                message = f"Area with name {area} was successfully added."
+            
         return render_template('add_area.html', name=area, message=message)
     
 @app.route('/edit_area', methods=['POST','GET'])
@@ -406,43 +414,127 @@ def update():
 @app.route('/search_bug', methods=['GET', 'POST'])
 def search_bug():
     if request.method == 'POST':
-        program = request.form.get('program')
-        report_type = request.form.get('report_type')
-        severity = request.form.get('severity')
-        problem_summary = request.form.get('problem_summary')
-        reproducible = request.form.get('reproducible')
-        problem = request.form.get('problem')
-        reported_by = request.form.get('reported_by')
-        date_reported = request.form.get('date_reported')
-        functional_area = request.form.get('functional_area')
-        assigned_to = request.form.get('assigned_to')
-        comments = request.form.get('comments')
-        status = request.form.get('status')
-        priority = request.form.get('priority')
-        resolution = request.form.get('resolution')
-        resolution_version = request.form.get('resolution_version')
-        resolved_by = request.form.get('resolved_by')
-        date_resolved = request.form.get('date_resolved')
-        tested_by = request.form.get('tested_by')
-        treat_as = request.form.get('treat_as')
+        field_values={
+        'program': request.form.get('program'),
+        'report_type': request.form.get('report_type'),
+        'severity': request.form.get('severity'),
+        'problem_summary': request.form.get('problem_summary'),
+        'reproducible': request.form.get('reproducible'),
+        'problem': request.form.get('problem'),
+        'reported_by': request.form.get('reported_by'),
+        'date_reported': request.form.get('date_reported'),
+        'functional_area': request.form.get('functional_area'),
+        'assigned_to': request.form.get('assigned_to'),
+        'comments': request.form.get('comments'),
+        'status': request.form.get('status'),
+        'priority': request.form.get('priority'),
+        'resolution': request.form.get('resolution'),
+        'resolution_version': request.form.get('resolution_version'),
+        'resolution_by': request.form.get('resolution_by'),
+        'date_resolved': request.form.get('date_resolved'),
+        'tested_by': request.form.get('tested_by')
+        }
+        print(field_values)
+        if field_values['date_reported']=='':
+            field_values['date_reported']=None
+
+        # build the SQL query based on user inputs
+        sql = "SELECT * FROM bug"
+        conditions = []
+        for field, value in field_values.items():
+            if value!=None:
+                conditions.append(f"{field} = '{value}'")
+            
+
+        if conditions:
+            sql += " WHERE " + " AND ".join(conditions)
+       
+
+
+        connection = pymysql.connect(**db_config)
+        with connection.cursor() as cursor:
+            print(sql)
+            cursor.execute(sql)
+            search_result=cursor.fetchall()
+            print(search_result)
+            connection.commit()
+
+
+        
+
         
         # process the form data and store it in the database using PL/SQL
         
         # redirect to a success page
-        return render_template('add_bug_success.html')
+        return render_template('search_bug_success.html', result=search_result)
     
+    connection = pymysql.connect(**db_config)
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM programs')
+        programs = cursor.fetchall()
+        connection.commit()
+
+        cursor.execute('SELECT * FROM areas')
+        areas = cursor.fetchall()
+        connection.commit()
+
+        cursor.execute('SELECT * FROM employees')
+        employees = cursor.fetchall()
+        connection.commit()
     # if the request method is GET, render the add_bug page with the necessary form data
-    programs = ['program1', 'program2', 'program3'] # replace with actual program list
-    report_types = ['coding error', 'design error', 'hardware error', 'suggestion']
+    #programs = programs # replace with actual program list
+    report_types = ['coding error', 'design error', 'hardware error', 'suggestion', 'Documentation', 'Query']
     severities = ['fatal', 'severe', 'minor']
-    employees = ['employee1', 'employee2', 'employee3'] # replace with actual employee list
-    areas = ['area1', 'area2', 'area3'] # replace with actual area list
-    
-    return render_template('search_bug_page.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas)
+    #employees = ['employee1', 'employee2', 'employee3'] # replace with actual employee list
+    #areas = ['area1', 'area2', 'area3'] # replace with actual area list
+    priority=[1,2,3,4,5,6]
+    status=['Open', 'Closed', 'Resolved']
+    resolution=['Pending', 'Fixed', 'Irreproducible', 'Deferred', 'As designed', 'Withdrawn by reporter', 'Need more info', 'Disagree with suggestion', 'Duplicate']
+    resolution_version=[1,2,3,4]
+    return render_template('search_bug_page.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status)
 
 # export data
-@app.route('/export_data')
+@app.route('/export_data', methods=['GET', 'POST'])
 def export_data():
+    if request.method == 'POST':
+        table_name = request.form['table_name']
+        data_type = request.form['data_type']
+        connection = pymysql.connect(**db_config)
+        with connection.cursor() as cursor:
+            
+
+            cursor.execute(f'SELECT * FROM {table_name}')
+            rows = cursor.fetchall()
+            # create a root element for the XML file
+            root = Element(table_name)
+            
+            # iterate over the rows and create subelements for each record
+            for row in rows:
+                record = SubElement(root, "record")
+                for key, value in row.items():
+                    field = SubElement(record, key)
+                    field.text = str(value)
+            
+            # generate the XML file and save it to disk
+            tree = ElementTree(root)
+            if data_type == "xml":
+                tree.write(f"{table_name}.xml", encoding="utf-8", xml_declaration=True)
+            elif data_type == "ascii":
+                with open(f"{table_name}.txt", "w") as f:
+                    for row in rows:
+                        for key, value in row.items():
+                            f.write(f"{key}: {value}\n")
+                        f.write("\n")
+            else:
+                print("Invalid data type")
+            
+            # close the database connection
+            cursor.close()
+            connection.close()
+            message = f"Table {table_name} with type {data_type} was successfully exported."
+            return render_template('export_data_success.html', message=message)
+
+
     return render_template('export_data.html')
 
 
