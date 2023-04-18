@@ -1,0 +1,42 @@
+<div class="container">
+    <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+          <li><a href="{{ url_for('dashboard') }}">Logout</a></li>
+        </ul>
+    </nav>
+</div>
+  <style>
+    .navbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 10px;
+      padding: 0 0px;
+      margin-bottom: 0px;
+    }
+    
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+      margin-bottom: 0px;
+      padding: 0;
+    }
+    
+    .nav-links li {
+      margin-left: 30px;
+    }
+    
+    .nav-links li:first-child {
+      margin-left: 0;
+    }
+    
+    .nav-links li a {
+      color: #333;
+      text-decoration: none;
+      font-size: 15px;
+    }
+  </style>
+  

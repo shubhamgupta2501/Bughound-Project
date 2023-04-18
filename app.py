@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 import pymysql.cursors
 
@@ -24,6 +24,7 @@ def index():
 @app.route('/insert', methods=['POST'])
 def insert():
     if request.method == "POST":
+        #flash("Data Inserted Successfully")
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
@@ -34,8 +35,10 @@ def insert():
             cursor.execute("INSERT INTO employees (name, username, password, userlevel) VALUES (%s, %s, %s, %s)", (name, username, password, userlevel))
             connection.commit()
             emp_id = cursor.lastrowid
-            message = f"Employee with name {name} was successfully added."
-        return render_template('add_employee.html', name=name, message=message)
+            message = f"Employee {name} was successfully added."
+
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
     
 
 @app.route('/edit', methods=['POST','GET'])
@@ -52,8 +55,10 @@ def edit():
             cursor.execute("UPDATE employees SET name=%s, username=%s, password=%s, userlevel=%s WHERE emp_id=%s", (name, username, password, userlevel, emp_id))
             connection.commit()
             
-            message = f"Employee with name {name} was successfully updated."
-        return render_template('update_employee.html', name=name, message=message)
+            message = f"Employee {name} was successfully updated."
+        
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
 
 @app.route('/delete/<string:id_data>', methods = ['GET'])
 def delete(id_data):
@@ -64,7 +69,9 @@ def delete(id_data):
         connection.commit()
         message=f"Employee with id {id_data} was succesfully deleted"
     
-        return render_template('delete_employee.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
+    
 @app.route('/add_program', methods=['POST'])
 def add_program():
     if request.method == "POST":
@@ -77,9 +84,10 @@ def add_program():
             cursor.execute("INSERT INTO programs (program,program_release,program_version) VALUES (%s, %s, %s)", (program, program_release, program_version))
             connection.commit()
             prog_id = cursor.lastrowid
-            message = f"Program with name {program} was successfully added."
+            message = f"Program {program} was successfully added."
         
-        return render_template('add_program.html', name=program, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_program'))
 @app.route('/edit_program', methods=['POST','GET'])
 def edit_program():
     if request.method == "POST":
@@ -94,8 +102,10 @@ def edit_program():
             cursor.execute("UPDATE programs SET program=%s, program_release=%s, program_version=%s WHERE prog_id=%s", (program,program_release, program_version,prog_id))
             connection.commit()
             
-            message = f"Program with name {program} was successfully updated."
-        return render_template('update_program.html', name=program, message=message)
+            message = f"Program {program} was successfully updated."
+        
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
 
 @app.route('/delete_program/<string:id_data>', methods = ['GET'])
 def delete_program(id_data):
@@ -106,7 +116,8 @@ def delete_program(id_data):
         connection.commit()
         message=f"Program with id {id_data} was succesfully deleted"
     
-        return render_template('delete_program.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
 
 
 @app.route('/add_area', methods=['POST'])
@@ -128,9 +139,10 @@ def add_area():
                 cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id))
                 connection.commit()
                 prog_id = cursor.lastrowid
-                message = f"Area with name {area} was successfully added."
+                message = f"Area {area} was successfully added."
             
-        return render_template('add_area.html', name=area, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_area'))
     
 @app.route('/edit_area', methods=['POST','GET'])
 def edit_area():
@@ -146,8 +158,10 @@ def edit_area():
             cursor.execute("UPDATE areas SET area=%s, prog_id=%s WHERE area_id=%s", (area,prog_id, area_id))
             connection.commit()
             
-            message = f"Areas with name {area} was successfully updated."
-        return render_template('update_area.html', name=area, message=message)
+            message = f"Areas {area} was successfully updated."
+       
+        flash(message=message)
+        return redirect(url_for('manage_area'))
 
 @app.route('/delete_area/<string:id_data>', methods = ['GET'])
 def delete_area(id_data):
@@ -158,7 +172,8 @@ def delete_area(id_data):
         connection.commit()
         message=f"Area with id {id_data} was succesfully deleted"
     
-        return render_template('delete_area.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_area'))
 
 
 

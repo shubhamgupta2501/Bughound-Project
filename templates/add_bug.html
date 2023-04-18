@@ -6,6 +6,7 @@
     
       </head>
 <body>
+  {% include "header.html" %}
     <div class="container">
         <div class="well text-center">
   
@@ -197,17 +198,22 @@
                   <option value="{{ employee['name'] }}">{{ employee['name'] }} {{ employee.lastname }}</option>
                 {% endfor %}
                 </select>
-            </div>
+            </div> 
 
-            
+            <div class="col-sm-12">
+              <label for="attachment">Attachment:</label><br>
+              <input type="file" id="attachment" name="attachment" class="form-control"><br><br>
+            </div>
 
         </div>
 
-        <div class="col-sm-12"></div>
-        <input type="submit" value="Submit">
-		<input type="reset" value="Reset">
-		<a href="/dashboard">Cancel</a>
-    </div>
+        
+        <div class="container"></div>
+        
+        <input type="submit" class="btn btn-default" value="Submit">
+		    <input type="reset" class="btn btn-default" value="Reset">
+		    <a class="btn" href="/dashboard">Cancel</a>
+         </div>
 
         </form>
     </div>

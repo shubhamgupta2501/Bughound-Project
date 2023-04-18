@@ -5,6 +5,7 @@
     <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
   </head>
   <body>
+    {% include "header.html" %}
     <div class="container">
       <div class="well text-center">
 
@@ -14,11 +15,11 @@
     </div>
 
     <div class="container">
-        <ul>
-            <li><a href="{{ url_for('manage_employee') }}">Manage Employee</a></li>
-            <li><a href="{{ url_for('manage_program') }}">Manage Program</a></li>
-            <li><a href="{{ url_for('manage_area') }}">Manage Area</a></li>
-            <li><a href="{{ url_for('export_data') }}">Export Data</a></li>
+        <ul class="list-group">
+            <li class="list-group-item"><a href="{{ url_for('manage_employee') }}">Manage Employee</a></li>
+            <li class="list-group-item"><a href="{{ url_for('manage_program') }}">Manage Program</a></li>
+            <li class="list-group-item"><a href="{{ url_for('manage_area') }}">Manage Area</a></li>
+            <li class="list-group-item"><a href="{{ url_for('export_data') }}">Export Data</a></li>
           </ul>
     </div>
   </body>

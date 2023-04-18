@@ -22,6 +22,12 @@ username: smithp
 password: 444
 userlevel: 2
 
+emp_id: 25
+name: shubham
+username: adminS
+password: password
+userlevel: 1
+
 emp_id: 1000
 name: Chels k
 username: chelfer
