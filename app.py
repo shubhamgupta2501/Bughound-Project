@@ -604,7 +604,7 @@ def search_bug():
         # process the form data and store it in the database using PL/SQL
         
         # redirect to a success page
-        return render_template('search_bug_success.html', result=search_result)
+        return render_template('search_bug_result.html', result=search_result)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
