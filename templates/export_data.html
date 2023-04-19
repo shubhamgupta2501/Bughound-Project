@@ -16,6 +16,32 @@
     </div>
 
 	<div class="container">
+    {%with messages = get_flashed_messages()%}
+
+    {%if messages%}
+
+    {% for message in messages %}
+
+    <div class="alert alert-success alert-dismissable" role="alert">
+
+     <button type="button" class="close" data-dismiss="alert" aria-label ="close">
+
+         <span aria-hidden="true">&times;</span>
+
+     </button>
+        {{message}}
+
+
+    </div>
+
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+
+
+
     <form action="{{ url_for('export_data') }}" method="POST">
       <label for="table_name">Table Name:</label><br>
       <select id="table_name" name="table_name" class ="form-control">
@@ -33,4 +59,8 @@
   </div>
 
 </body>
+
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+<script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
 

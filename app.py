@@ -38,7 +38,7 @@ def login_auth():
             condition = False
             if session['user_level'] ==3:
                 condition = True
-            return redirect('/dashboard')
+            return render_template('dashboard.html', condition = condition)    
         else:
             message = f"Incorrect username or password"
             flash(message=message)
@@ -59,8 +59,11 @@ def logout():
 # Dashboard page
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
+    condition = False
+    if session['user_level'] ==3:
+        condition = True
     if "loggedin" in session:
-         return render_template('dashboard.html')
+         return render_template('dashboard.html', condition = condition)
     else:
         message = f"You need to Login first"
         flash(message=message)
@@ -225,7 +228,8 @@ def add_area():
                 connection.commit()
                 prog_id = cursor.lastrowid
                 message = f"Area {area} was successfully added."
-            
+
+
         flash(message=message)
         return redirect(url_for('manage_area'))
     
@@ -327,7 +331,8 @@ def delete_bug(id_data):
         connection.commit()
         message=f"Bug with id {id_data} was succesfully deleted"
     
-        return render_template('delete_bug.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('update_bug'))
 
 
 
@@ -385,7 +390,9 @@ def edit_bug():
             connection.commit()
             
             message = f"Bug with name {program} was successfully updated."
-        return render_template('update_bug_success.html', name=program, message=message)
+        
+        flash(message=message)
+        return redirect(url_for('update_bug'))
 
 
 #add Bugs Page
@@ -448,7 +455,9 @@ def add_bug():
         # process the form data and store it in the database using PL/SQL
         
         # redirect to a success page
-        return render_template('add_bug_success.html')
+        flash(message=message)
+        return redirect(url_for('add_bug'))
+
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -483,6 +492,11 @@ def maintain_database():
          flash(message=message)
          return render_template('login.html')
     
+
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     return render_template('maintain_database.html')
 
 # manage employee page
@@ -493,6 +507,11 @@ def manage_employee():
          flash(message=message)
          return render_template('login.html')
      
+
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM employees')
@@ -508,6 +527,10 @@ def manage_program():
          message = f"You need to Login first"
          flash(message=message)
          return render_template('login.html')
+    
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -525,6 +548,10 @@ def manage_area():
          flash(message=message)
          return render_template('login.html')
     
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM areas')
@@ -538,7 +565,7 @@ def update():
          message = f"You need to Login first"
          flash(message=message)
          return render_template('login.html')
-    
+
     return redirect(url_for('manage_employee'))
 
 
@@ -640,6 +667,10 @@ def export_data():
          flash(message=message)
          return render_template('login.html')
     
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     if request.method == 'POST':
         table_name = request.form['table_name']
         data_type = request.form['data_type']
@@ -676,7 +707,8 @@ def export_data():
             cursor.close()
             connection.close()
             message = f"Table {table_name} with type {data_type} was successfully exported."
-            return render_template('export_data_success.html', message=message)
+            flash(message=message)
+            return redirect(url_for('export_data'))
 
 
     return render_template('export_data.html')
