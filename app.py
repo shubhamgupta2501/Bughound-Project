@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 import pymysql.cursors
 
@@ -19,11 +19,65 @@ db_config = {
 # define a route to display the employee table
 @app.route("/")
 def index():
-    return render_template("login.html")
+   return render_template("login.html")
+
+# Login Authentication
+@app.route('/', methods=['POST','GET'])
+def login_auth():
+    username = request.form['username']
+    password = request.form['password']
+
+    connection = pymysql.connect(**db_config)
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM employees WHERE username = %s', username)
+        employee = cursor.fetchone()
+        if employee and employee['password'] == password:
+            session['loggedin'] = True
+            session['username'] = username
+            session['user_level'] = employee["userlevel"]
+            condition = False
+            if session['user_level'] ==3:
+                condition = True
+            return render_template('dashboard.html', condition = condition)    
+        else:
+            message = f"Incorrect username or password"
+            flash(message=message)
+            return redirect('/')
+  
+
+@app.route('/logout', methods=['POST','GET'])
+def logout():
+    if "loggedin" in session:
+        message = f"You are Logged out Succesfully"
+        flash(message=message)
+        session.pop('loggedin', None)
+    else:
+        message = f"You need to Login first"
+        flash(message=message)
+    return redirect('/')
+
+# Dashboard page
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    condition = False
+    if session['user_level'] ==3:
+        condition = True
+    if "loggedin" in session:
+         return render_template('dashboard.html', condition = condition)
+    else:
+        message = f"You need to Login first"
+        flash(message=message)
+        return render_template('login.html')
 
 @app.route('/insert', methods=['POST'])
 def insert():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
+        #flash("Data Inserted Successfully")
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
@@ -34,12 +88,19 @@ def insert():
             cursor.execute("INSERT INTO employees (name, username, password, userlevel) VALUES (%s, %s, %s, %s)", (name, username, password, userlevel))
             connection.commit()
             emp_id = cursor.lastrowid
-            message = f"Employee with name {name} was successfully added."
-        return render_template('add_employee.html', name=name, message=message)
+            message = f"Employee {name} was successfully added."
+
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
     
 
 @app.route('/edit', methods=['POST','GET'])
 def edit():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
         emp_id = request.form['emp_id']
         name = request.form['name']
@@ -52,11 +113,19 @@ def edit():
             cursor.execute("UPDATE employees SET name=%s, username=%s, password=%s, userlevel=%s WHERE emp_id=%s", (name, username, password, userlevel, emp_id))
             connection.commit()
             
-            message = f"Employee with name {name} was successfully updated."
-        return render_template('update_employee.html', name=name, message=message)
+            message = f"Employee {name} was successfully updated."
+        
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
 
 @app.route('/delete/<string:id_data>', methods = ['GET'])
 def delete(id_data):
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM employees WHERE emp_id=%s", (id_data,))
@@ -64,9 +133,17 @@ def delete(id_data):
         connection.commit()
         message=f"Employee with id {id_data} was succesfully deleted"
     
-        return render_template('delete_employee.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
+    
 @app.route('/add_program', methods=['POST'])
 def add_program():
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
         program = request.form['program']
         program_release = request.form['release']
@@ -77,11 +154,18 @@ def add_program():
             cursor.execute("INSERT INTO programs (program,program_release,program_version) VALUES (%s, %s, %s)", (program, program_release, program_version))
             connection.commit()
             prog_id = cursor.lastrowid
-            message = f"Program with name {program} was successfully added."
+            message = f"Program {program} was successfully added."
         
-        return render_template('add_program.html', name=program, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_program'))
+    
 @app.route('/edit_program', methods=['POST','GET'])
 def edit_program():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
         prog_id = request.form['prog_id']
         program = request.form['program']
@@ -94,11 +178,19 @@ def edit_program():
             cursor.execute("UPDATE programs SET program=%s, program_release=%s, program_version=%s WHERE prog_id=%s", (program,program_release, program_version,prog_id))
             connection.commit()
             
-            message = f"Program with name {program} was successfully updated."
-        return render_template('update_program.html', name=program, message=message)
+            message = f"Program {program} was successfully updated."
+        
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
 
 @app.route('/delete_program/<string:id_data>', methods = ['GET'])
 def delete_program(id_data):
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM programs WHERE prog_id=%s", (id_data,))
@@ -106,11 +198,18 @@ def delete_program(id_data):
         connection.commit()
         message=f"Program with id {id_data} was succesfully deleted"
     
-        return render_template('delete_program.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_employee'))
 
 
 @app.route('/add_area', methods=['POST'])
 def add_area():
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
         area = request.form['area']
         
@@ -128,12 +227,19 @@ def add_area():
                 cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id))
                 connection.commit()
                 prog_id = cursor.lastrowid
-                message = f"Area with name {area} was successfully added."
-            
-        return render_template('add_area.html', name=area, message=message)
+                message = f"Area {area} was successfully added."
+
+
+        flash(message=message)
+        return redirect(url_for('manage_area'))
     
 @app.route('/edit_area', methods=['POST','GET'])
 def edit_area():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
         prog_id = request.form['prog_id']
         area = request.form['area']
@@ -146,11 +252,19 @@ def edit_area():
             cursor.execute("UPDATE areas SET area=%s, prog_id=%s WHERE area_id=%s", (area,prog_id, area_id))
             connection.commit()
             
-            message = f"Areas with name {area} was successfully updated."
-        return render_template('update_area.html', name=area, message=message)
+            message = f"Areas {area} was successfully updated."
+       
+        flash(message=message)
+        return redirect(url_for('manage_area'))
 
 @app.route('/delete_area/<string:id_data>', methods = ['GET'])
 def delete_area(id_data):
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM areas WHERE area_id=%s", (id_data,))
@@ -158,19 +272,19 @@ def delete_area(id_data):
         connection.commit()
         message=f"Area with id {id_data} was succesfully deleted"
     
-        return render_template('delete_area.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('manage_area'))
 
-
-
-
-# Dashboard page
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
 
 # Add/Update Bugs page
 @app.route('/update_bug')
 def update_bug():
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     report_types = ['coding error', 'design error', 'hardware error', 'suggestion', 'Documentation', 'Query']
     severities = ['fatal', 'severe', 'minor']
     #employees = ['employee1', 'employee2', 'employee3'] # replace with actual employee list
@@ -204,6 +318,12 @@ def update_bug():
 
 @app.route('/delete_bug/<string:id_data>', methods = ['GET'])
 def delete_bug(id_data):
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM bug WHERE bug_id=%s", (id_data,))
@@ -211,13 +331,19 @@ def delete_bug(id_data):
         connection.commit()
         message=f"Bug with id {id_data} was succesfully deleted"
     
-        return render_template('delete_bug.html', id_data=id_data, message=message)
+        flash(message=message)
+        return redirect(url_for('update_bug'))
 
 
 
 
 @app.route('/edit_bug', methods=['POST','GET'])
 def edit_bug():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == "POST":
         bug_id = request.form['bug_id']
         
@@ -264,12 +390,19 @@ def edit_bug():
             connection.commit()
             
             message = f"Bug with name {program} was successfully updated."
-        return render_template('update_bug_success.html', name=program, message=message)
+        
+        flash(message=message)
+        return redirect(url_for('update_bug'))
 
 
 #add Bugs Page
 @app.route('/add_bug', methods=['GET', 'POST'])
 def add_bug():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == 'POST':
         program = request.form.get('program')
         report_type = request.form.get('report_type')
@@ -324,7 +457,9 @@ def add_bug():
         # process the form data and store it in the database using PL/SQL
         
         # redirect to a success page
-        return render_template('add_bug_success.html')
+        flash(message=message)
+        return redirect(url_for('add_bug'))
+
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -354,11 +489,31 @@ def add_bug():
 # Maintain Database page
 @app.route('/maintain_database')
 def maintain_database():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
+
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     return render_template('maintain_database.html')
 
 # manage employee page
 @app.route('/manage_employee')
 def manage_employee():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+     
+
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM employees')
@@ -370,6 +525,15 @@ def manage_employee():
 # manage program page
 @app.route('/manage_program')
 def manage_program():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM programs')
@@ -381,6 +545,15 @@ def manage_program():
 # manage area page
 @app.route('/manage_area')
 def manage_area():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM areas')
@@ -388,33 +561,25 @@ def manage_area():
         connection.commit()
     return render_template('manage_area.html', areas=data)
 
-# Login Authentication
-@app.route('/', methods=['POST'])
-def login_auth():
-    username = request.form['username']
-    password = request.form['password']
-
-    connection = pymysql.connect(**db_config)
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM employees WHERE username = %s', username)
-        employee = cursor.fetchone()
-        if employee and employee['password'] == password:
-            session['username'] = username
-            return redirect('/dashboard')
-        else:
-            error = 'Invalid username or password. Please try again.'
-            return redirect('/')
-  
-
-
 @app.route('/update',methods=['POST','GET'])
 def update():
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+
     return redirect(url_for('manage_employee'))
 
 
 #add Bugs Page
 @app.route('/search_bug', methods=['GET', 'POST'])
 def search_bug():
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
     if request.method == 'POST':
         field_values={
         'program': request.form.get('program'),
@@ -468,7 +633,7 @@ def search_bug():
         # process the form data and store it in the database using PL/SQL
         
         # redirect to a success page
-        return render_template('search_bug_success.html', result=search_result)
+        return render_template('search_bug_result.html', result=search_result)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -498,6 +663,16 @@ def search_bug():
 # export data
 @app.route('/export_data', methods=['GET', 'POST'])
 def export_data():
+
+    if "loggedin" not in session:
+         message = f"You need to Login first"
+         flash(message=message)
+         return render_template('login.html')
+    
+    if session['user_level'] != 3:
+        condition = False
+        return render_template('dashboard.html', condition = condition)
+    
     if request.method == 'POST':
         table_name = request.form['table_name']
         data_type = request.form['data_type']
@@ -534,7 +709,8 @@ def export_data():
             cursor.close()
             connection.close()
             message = f"Table {table_name} with type {data_type} was successfully exported."
-            return render_template('export_data_success.html', message=message)
+            flash(message=message)
+            return redirect(url_for('export_data'))
 
 
     return render_template('export_data.html')
