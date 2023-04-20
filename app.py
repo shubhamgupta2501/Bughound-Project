@@ -72,7 +72,7 @@ def header():
 def dashboard():
     username = session['username']
     userlevel =session['user_level']
-    print("pp", username,userlevel)
+    #print("pp", username,userlevel)
     condition = False
     if session['user_level'] ==3:
         condition = True
@@ -538,6 +538,8 @@ def add_bug():
 # Maintain Database page
 @app.route('/maintain_database')
 def maintain_database():
+    username = session['username']
+    userlevel =session['user_level']
     if "loggedin" not in session:
          message = f"You need to Login first"
          flash(message=message)
@@ -546,13 +548,15 @@ def maintain_database():
 
     if session['user_level'] != 3:
         condition = False
-        return render_template('dashboard.html', condition = condition)
+        return render_template('dashboard.html', condition = condition, username=username, userlevel=userlevel)
     
-    return render_template('maintain_database.html')
+    return render_template('maintain_database.html', username=username, userlevel=userlevel)
 
 # manage employee page
 @app.route('/manage_employee')
 def manage_employee():
+    username = session['username']
+    userlevel =session['user_level']
     if "loggedin" not in session:
          message = f"You need to Login first"
          flash(message=message)
@@ -561,7 +565,7 @@ def manage_employee():
 
     if session['user_level'] != 3:
         condition = False
-        return render_template('dashboard.html', condition = condition)
+        return render_template('dashboard.html', condition = condition, username=username, userlevel=userlevel)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -569,11 +573,13 @@ def manage_employee():
         data = cursor.fetchall()
         connection.commit()
      
-        return render_template('manage_employee.html', employees=data)
+        return render_template('manage_employee.html', employees=data, username=username, userlevel=userlevel)
 
 # manage program page
 @app.route('/manage_program')
 def manage_program():
+    username = session['username']
+    userlevel =session['user_level']
     if "loggedin" not in session:
          message = f"You need to Login first"
          flash(message=message)
@@ -581,7 +587,7 @@ def manage_program():
     
     if session['user_level'] != 3:
         condition = False
-        return render_template('dashboard.html', condition = condition)
+        return render_template('dashboard.html', condition = condition, username=username, userlevel=userlevel)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -589,11 +595,13 @@ def manage_program():
         data = cursor.fetchall()
         connection.commit()
      
-        return render_template('manage_program.html', program=data)
+        return render_template('manage_program.html', program=data, username=username, userlevel=userlevel)
 
 # manage area page
 @app.route('/manage_area')
 def manage_area():
+    username = session['username']
+    userlevel =session['user_level']
     if "loggedin" not in session:
          message = f"You need to Login first"
          flash(message=message)
@@ -601,7 +609,7 @@ def manage_area():
     
     if session['user_level'] != 3:
         condition = False
-        return render_template('dashboard.html', condition = condition)
+        return render_template('dashboard.html', condition = condition, username=username, userlevel=userlevel)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -611,7 +619,7 @@ def manage_area():
         cursor.execute('SELECT * FROM programs')
         programs = cursor.fetchall()
         connection.commit()
-    return render_template('manage_area.html', areas=data, programs=programs)
+    return render_template('manage_area.html', areas=data, programs=programs, username=username, userlevel=userlevel)
 
 @app.route('/update',methods=['POST','GET'])
 def update():
