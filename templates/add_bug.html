@@ -43,9 +43,9 @@
         
         <div class="col-sm-12">
             <div class="col-sm-4">
-                <label for="program">Program:</label>
-                <select id="program" name="program" class ="form-control">
-                  <option disabled selected>Please select</option>
+                <label for="program">Program*:</label>
+                <select id="program" name="program" class ="form-control" required>
+                  <option value ="" disabled selected>Please select</option>
                     {% for program in programs %}
                         <option value="{{ program['program']}}">{{ program['program']}}</option>
                     {% endfor %}
@@ -53,9 +53,9 @@
             </div>
             
             <div class="col-sm-4">
-                <label for="report_type">Report Type:</label>
-                <select id="report_type" name="report_type" class ="form-control">
-                  <option disabled selected>Please select</option>
+                <label for="report_type">Report Type*:</label>
+                <select id="report_type" name="report_type" class ="form-control" required>
+                  <option value="" disabled selected>Please select</option>
                     {% for report_type in report_types %}
                         <option value="{{ report_type }}">{{ report_type }}</option>
                     {% endfor %}
@@ -64,10 +64,10 @@
             
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="severity">Severity:</label>
+                    <label for="severity">Severity*:</label>
                     
-                    <select name="severity" id="severity" class ="form-control">
-                      <option disabled selected>Please select</option>
+                    <select name="severity" id="severity" class ="form-control" required>
+                      <option value=""  disabled selected>Please select</option>
                       {% for severity in severities %}
                         <option value="{{ severity }}">{{ severity }}</option>
                       {% endfor %}
@@ -77,16 +77,16 @@
             
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="problem_summary">Problem Summary:</label>
-                <input type="text" name="problem_summary" id="problem_summary" class="form-control">
+                <label for="problem_summary">Problem Summary*:</label>
+                <input type="text" name="problem_summary" id="problem_summary" class="form-control" required>
               </div>
             </div>
               
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="reproducible">Reproducible:</label>
-                <select name="reproducible" id="reproducible" class="form-control">
-                  <option disabled selected>Please select</option>
+                <label for="reproducible">Reproducible*:</label>
+                <select name="reproducible" id="reproducible" class="form-control" required>
+                  <option value ="" disabled selected>Please select</option>
                   <option value="0">Yes</option>
                   <option value="1">No</option>
                 </select>
@@ -96,16 +96,16 @@
         
             <div class="col-sm-12">
               <div class="form-group">
-                <label for="problem">Problem:</label>
-                <textarea name="problem" id="problem" class="form-control"></textarea>
+                <label for="problem">Problem*:</label>
+                <textarea name="problem" id="problem" class="form-control" required></textarea>
               </div>
             </div>
     
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="reported_by">Reported By:</label>
-                <select name="reported_by" id="reported_by" class="form-control">
-                  <option disabled selected>Please select</option>
+                <label for="reported_by">Reported By*:</label>
+                <select name="reported_by" id="reported_by" class="form-control" required>
+                  <option value="" disabled selected>Please select</option>
                   {% for employee in employees %}
                     <option value="{{ employee['name'] }}">{{ employee['name'] }} {{ employee.lastname }}</option>
                   {% endfor %}
@@ -116,8 +116,8 @@
 
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="date_reported">Date Reported:</label>
-                <input type="date" name="date_reported" id="date_reported" class="form-control">
+                <label for="date_reported">Date Reported*:</label>
+                <input type="date" name="date_reported" id="date_reported" class="form-control" required>
               </div>
             </div>
         
@@ -126,10 +126,10 @@
         <div class="col-sm-12">
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="functional_area">Functional Area:</label>
-                <select name="functional_area" id="functional_area" class="form-control">
+                <label for="functional_area">Functional Area*:</label>
+                <select name="functional_area" id="functional_area" class="form-control" required>
                   
-                  <option disabled selected>Please select</option>
+                  <option value="" disabled selected>Please select</option>
                   {% for area in areas %}
                     <option value="{{ area['area'] }}">{{ area['area'] }}</option>
                   {% endfor %}
@@ -139,9 +139,9 @@
     
               <div class="col-sm-3">
               <div class="form-group">
-                <label for="assigned_to">Assigned To:</label>
-                <select name="assigned_to" id="assigned_to" class="form-control">
-                  <option disabled selected>Please select</option>
+                <label for="assigned_to">Assigned To*:</label>
+                <select name="assigned_to" id="assigned_to" class="form-control" required>
+                  <option value="" disabled selected>Please select</option>
                   {% for employee in employees %}
                     <option value="{{ employee['name'] }}">{{ employee['name'] }} {{ employee.lastname }}</option>
                   {% endfor %}

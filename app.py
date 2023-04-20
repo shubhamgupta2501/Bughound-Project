@@ -38,7 +38,7 @@ def login_auth():
             condition = False
             if session['user_level'] ==3:
                 condition = True
-            return render_template('dashboard.html', condition = condition)    
+            return render_template('dashboard.html', condition = condition, username = username)    
         else:
             message = f"Incorrect username or password"
             flash(message=message)
@@ -56,14 +56,24 @@ def logout():
         flash(message=message)
     return redirect('/')
 
+@app.route('/header', methods=['GET'])
+def header():
+    username = session['username']
+    userlevel =session['user_level']
+    print("mmmmmm",userlevel,username)
+    return render_template('header.html', username=username, userlevel=userlevel ) 
+
 # Dashboard page
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
+    username = session['username']
+    userlevel =session['user_level']
+    print("pp", username,userlevel)
     condition = False
     if session['user_level'] ==3:
         condition = True
     if "loggedin" in session:
-         return render_template('dashboard.html', condition = condition)
+         return render_template('dashboard.html', condition = condition, username=username, userlevel=userlevel)
     else:
         message = f"You need to Login first"
         flash(message=message)
@@ -211,6 +221,7 @@ def add_area():
          return render_template('login.html')
     
     if request.method == "POST":
+        print(request.form)
         area = request.form['area']
         
         prog_id = request.form['prog_id']
@@ -221,10 +232,20 @@ def add_area():
             result = cursor.fetchone()
             print(result['COUNT(*)'])
             connection.commit()
+            '''
+
+
+            cursor.execute("SELECT prog_id FROM programs where program=%s",(program,))
+            prog_id = cursor.fetchone()
+            print(prog_id)
+            '''
+
+
+
             if result['COUNT(*)'] == 0:
-                print("Cannot add area - programs table is empty.")
+                message="Cannot add area - programs table is empty."
             else:
-                cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id))
+                cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id["prog_id"]))
                 connection.commit()
                 prog_id = cursor.lastrowid
                 message = f"Area {area} was successfully added."
@@ -559,7 +580,10 @@ def manage_area():
         cursor.execute('SELECT * FROM areas')
         data = cursor.fetchall()
         connection.commit()
-    return render_template('manage_area.html', areas=data)
+        cursor.execute('SELECT * FROM programs')
+        programs = cursor.fetchall()
+        connection.commit()
+    return render_template('manage_area.html', areas=data, programs=programs)
 
 @app.route('/update',methods=['POST','GET'])
 def update():

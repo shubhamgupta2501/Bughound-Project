@@ -101,9 +101,22 @@
             
                     
                               <div class="form-group">
-                                 <label>Program Id:</label>
-                               <input type="text" class="form-control" name="prog_id" value="{{row['prog_id']}}"> 
+                                
+                              
+                                 <label for="prog_id">Program Id:</label>
+                                  <select id="prog_id" name="prog_id" class ="form-control">
+                                    <option disabled selected>Please select</option>
+                                      {% for program in programs %}
+                                        {% if program['prog_id'] ==row['prog_id'] %}
+                                          <option value="{{ program['prog_id'] }}" selected>{{ program['prog_id']}}</option>
+                                          {% else %}
+                                          <option value="{{ program['prog_id'] }}">{{ program['prog_id'] }}</option>
+                                      {% endif %}
+                                      {% endfor %}
+                                  </select>
+                              
                               </div>
+     
    
                               
             
@@ -164,9 +177,19 @@
            
                    
                              <div class="form-group">
-                                <label>Program Id:</label>
-                              <input type="text" class="form-control" name="prog_id"> 
-                             </div>
+                                
+                              
+                              <label for="prog_id">Program Id:</label>
+                                  <select id="prog_id" name="prog_id" class ="form-control">
+                                    <option disabled selected>Please select</option>
+                                      {% for program in programs %}
+                                        
+                                          <option value="{{ program['prog_id'] }}">{{ program['prog_id'] }}</option>
+                                     
+                                      {% endfor %}
+                                  </select>
+                           
+                              </div>
   
                              
            

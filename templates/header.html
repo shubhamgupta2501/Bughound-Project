@@ -1,6 +1,8 @@
 <div class="container">
     <nav class="navbar">
         <ul class="nav-links">
+          <li>User: {{username}}</li>
+          <li>User Level : {{userlevel}}</li>
           <li><a href="{{ url_for('dashboard') }}">Home</a></li>
           <li><a href="{{ url_for('logout') }}">Logout</a></li>
         </ul>
