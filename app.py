@@ -1,7 +1,8 @@
 
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, send_file
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 import pymysql.cursors
+from io import BytesIO
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -19,6 +20,7 @@ db_config = {
 # define a route to display the employee table
 @app.route("/")
 def index():
+   print("login")
    return render_template("login.html")
 
 # Login Authentication
@@ -38,7 +40,9 @@ def login_auth():
             condition = False
             if session['user_level'] ==3:
                 condition = True
-            return render_template('dashboard.html', condition = condition, username = username)    
+            print('here')
+            #return render_template('dashboard.html', condition = condition, username = username)   
+            return redirect('/dashboard') 
         else:
             message = f"Incorrect username or password"
             flash(message=message)
@@ -55,14 +59,14 @@ def logout():
         message = f"You need to Login first"
         flash(message=message)
     return redirect('/')
-
+'''
 @app.route('/header', methods=['GET'])
 def header():
     username = session['username']
     userlevel =session['user_level']
     print("mmmmmm",userlevel,username)
     return render_template('header.html', username=username, userlevel=userlevel ) 
-
+'''
 # Dashboard page
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
@@ -300,6 +304,8 @@ def delete_area(id_data):
 # Add/Update Bugs page
 @app.route('/update_bug')
 def update_bug():
+    username = session['username']
+    userlevel =session['user_level']
 
     if "loggedin" not in session:
          message = f"You need to Login first"
@@ -335,7 +341,7 @@ def update_bug():
 
         print(data)
     
-    return render_template('update_bug.html', bugs=data, programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status)
+    return render_template('update_bug.html',username=username,userlevel=userlevel, bugs=data, programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status)
 
 @app.route('/delete_bug/<string:id_data>', methods = ['GET'])
 def delete_bug(id_data):
@@ -366,26 +372,36 @@ def edit_bug():
          return render_template('login.html')
     
     if request.method == "POST":
-        bug_id = request.form['bug_id']
+        print(request.form)
+        bug_id = request.form.get('bug_id')
         
-        program = request.form['program']
-        report_type = request.form['report_type']
-        severity = request.form['severity']
-        problem_summary = request.form['problem_summary']
-        reproducible = request.form['reproducible']
-        problem = request.form['problem']
-        reported_by = request.form['reported_by']
-        date_reported = request.form['date_reported']
-        functional_area = request.form['functional_area']
-        assigned_to = request.form['assigned_to']
-        comments = request.form['comments']
-        status = request.form['status']
-        priority = request.form['priority']
-        resolution = request.form['resolution']
-        resolution_version = request.form['resolution_version']
-        resolution_by = request.form['resolution_by']
-        date_resolved = request.form['date_resolved']
-        tested_by = request.form['tested_by']
+        program = request.form.get('program')
+        report_type = request.form.get('report_type')
+        severity = request.form.get('severity')
+        problem_summary = request.form.get('problem_summary')
+        reproducible = request.form.get('reproducible')
+        problem = request.form.get('problem')
+        reported_by = request.form.get('reported_by')
+        date_reported = request.form.get('date_reported')
+        functional_area = request.form.get('functional_area')
+        assigned_to = request.form.get('assigned_to')
+        comments = request.form.get('comments')
+        status = request.form.get('status')
+        priority = request.form.get('priority')
+        resolution = request.form.get('resolution')
+        resolution_version = request.form.get('resolution_version')
+        resolution_by = request.form.get('resolution_by')
+        date_resolved = request.form.get('date_resolved')
+        tested_by = request.form.get('tested_by')
+        
+        # Get the file attachment from the form
+        attachment = request.files["attachment"]
+        # Get the filename of the attachment
+        file_name = attachment.filename
+
+        # Read the contents of the file
+        attachment = attachment.read()
+        
     
         connection = pymysql.connect(**db_config)
         with connection.cursor() as cursor:
@@ -398,16 +414,16 @@ def edit_bug():
             area_id = cursor.fetchone()
         
             connection.commit()
-            print("UPDATE bug SET program=%s, report_type=%s, severity=%s, problem_summary=%s, reproducible=%s, problem=%s, reported_by=%s, date_reported=%s, functional_area=%s, assigned_to=%s, comments=%s, status=%s, priority=%s, resolution=%s, resolution_version=%s, resolution_by=%s, date_resolved=%s, tested_by=%s, prog_id=%s, area_id=%s WHERE bug_id=%s", (program, report_type, severity, 
+            print("UPDATE bug SET program=%s, report_type=%s, severity=%s, problem_summary=%s, reproducible=%s, problem=%s, reported_by=%s, date_reported=%s, functional_area=%s, assigned_to=%s, comments=%s, status=%s, priority=%s, resolution=%s, resolution_version=%s, resolution_by=%s, date_resolved=%s, tested_by=%s, prog_id=%s, area_id=%s, attachment=%s, filename=%s WHERE bug_id=%s", (program, report_type, severity, 
                                             problem_summary, reproducible, problem, reported_by, 
                                             date_reported, functional_area, assigned_to, comments, 
                                             status, priority, resolution, resolution_version, resolution_by,
-                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id'], bug_id))
-            cursor.execute("UPDATE bug SET program=%s, report_type=%s, severity=%s, problem_summary=%s, reproducible=%s, problem=%s, reported_by=%s, date_reported=%s, functional_area=%s, assigned_to=%s, comments=%s, status=%s, priority=%s, resolution=%s, resolution_version=%s, resolution_by=%s, date_resolved=%s, tested_by=%s, prog_id=%s, area_id=%s WHERE bug_id=%s", (program, report_type, severity, 
+                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id'], attachment, file_name, bug_id))
+            cursor.execute("UPDATE bug SET program=%s, report_type=%s, severity=%s, problem_summary=%s, reproducible=%s, problem=%s, reported_by=%s, date_reported=%s, functional_area=%s, assigned_to=%s, comments=%s, status=%s, priority=%s, resolution=%s, resolution_version=%s, resolution_by=%s, date_resolved=%s, tested_by=%s, prog_id=%s, area_id=%s, attachment=%s, filename=%s WHERE bug_id=%s", (program, report_type, severity, 
                                             problem_summary, reproducible, problem, reported_by, 
                                             date_reported, functional_area, assigned_to, comments, 
                                             status, priority, resolution, resolution_version, resolution_by,
-                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id'], bug_id))
+                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id'], attachment,file_name, bug_id))
             connection.commit()
             
             message = f"Bug with name {program} was successfully updated."
@@ -419,6 +435,8 @@ def edit_bug():
 #add Bugs Page
 @app.route('/add_bug', methods=['GET', 'POST'])
 def add_bug():
+    username = session['username']
+    userlevel =session['user_level']
     if "loggedin" not in session:
          message = f"You need to Login first"
          flash(message=message)
@@ -444,9 +462,19 @@ def add_bug():
         date_resolved = request.form.get('date_resolved')
         tested_by = request.form.get('tested_by')
         
+        # Get the file attachment from the form
+        attachment = request.files["attachment"]
+        # Get the filename of the attachment
+        file_name = attachment.filename
+
+        # Read the contents of the file
+        attachment = attachment.read()
+        
+        
 
         connection = pymysql.connect(**db_config)
         with connection.cursor() as cursor:
+            
 
             cursor.execute("SELECT prog_id FROM programs WHERE program=%s", (program,))
             prog_id = cursor.fetchone()
@@ -459,16 +487,16 @@ def add_bug():
             connection.commit()
 
             
-            print("INSERT INTO bug (program, report_type, severity, problem_summary, reproducible, problem, reported_by, date_reported, functional_area, assigned_to, comments, status, priority, resolution, resolution_version, resolution_by,date_resolved, tested_by, prog_id, area_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (program, report_type, severity, 
+            print("INSERT INTO bug (program, report_type, severity, problem_summary, reproducible, problem, reported_by, date_reported, functional_area, assigned_to, comments, status, priority, resolution, resolution_version, resolution_by,date_resolved, tested_by, prog_id, area_id, attachment, filename) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s, %s)", (program, report_type, severity, 
                                             problem_summary, reproducible, problem, reported_by, 
                                             date_reported, functional_area, assigned_to, comments, 
                                             status, priority, resolution, resolution_version, resolution_by,
-                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id']))
-            cursor.execute("INSERT INTO bug (program, report_type, severity, problem_summary, reproducible, problem, reported_by, date_reported, functional_area, assigned_to, comments, status, priority, resolution, resolution_version, resolution_by,date_resolved, tested_by, prog_id, area_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (program, report_type, severity, 
+                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id'], attachment, file_name))
+            cursor.execute("INSERT INTO bug (program, report_type, severity, problem_summary, reproducible, problem, reported_by, date_reported, functional_area, assigned_to, comments, status, priority, resolution, resolution_version, resolution_by,date_resolved, tested_by, prog_id, area_id, attachment, filename) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s, %s)", (program, report_type, severity, 
                                             problem_summary, reproducible, problem, reported_by, 
                                             date_reported, functional_area, assigned_to, comments, 
                                             status, priority, resolution, resolution_version, resolution_by,
-                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id']))
+                                            date_resolved, tested_by, prog_id['prog_id'], area_id['area_id'], attachment, file_name))
             connection.commit()
             
             bug_id= cursor.lastrowid
@@ -505,7 +533,7 @@ def add_bug():
     status=['Open', 'Closed', 'Resolved']
     resolution=['Pending', 'Fixed', 'Irreproducible', 'Deferred', 'As designed', 'Withdrawn by reporter', 'Need more info', 'Disagree with suggestion', 'Duplicate']
     resolution_version=[1,2,3,4]
-    return render_template('add_bug.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status)
+    return render_template('add_bug.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status, username=username, userlevel=userlevel)
 
 # Maintain Database page
 @app.route('/maintain_database')
@@ -598,6 +626,8 @@ def update():
 #add Bugs Page
 @app.route('/search_bug', methods=['GET', 'POST'])
 def search_bug():
+    username = session['username']
+    userlevel =session['user_level']
 
     if "loggedin" not in session:
          message = f"You need to Login first"
@@ -650,6 +680,28 @@ def search_bug():
             print(search_result)
             connection.commit()
 
+            cursor.execute('SELECT * FROM programs')
+            programs = cursor.fetchall()
+            connection.commit()
+
+            cursor.execute('SELECT * FROM areas')
+            areas = cursor.fetchall()
+            connection.commit()
+
+            cursor.execute('SELECT * FROM employees')
+            employees = cursor.fetchall()
+            connection.commit()
+        # if the request method is GET, render the add_bug page with the necessary form data
+        #programs = programs # replace with actual program list
+        report_types = ['coding error', 'design error', 'hardware error', 'suggestion', 'Documentation', 'Query']
+        severities = ['fatal', 'severe', 'minor']
+        #employees = ['employee1', 'employee2', 'employee3'] # replace with actual employee list
+        #areas = ['area1', 'area2', 'area3'] # replace with actual area list
+        priority=[1,2,3,4,5,6]
+        status=['Open', 'Closed', 'Resolved']
+        resolution=['Pending', 'Fixed', 'Irreproducible', 'Deferred', 'As designed', 'Withdrawn by reporter', 'Need more info', 'Disagree with suggestion', 'Duplicate']
+        resolution_version=[1,2,3,4]
+
 
         
 
@@ -657,7 +709,7 @@ def search_bug():
         # process the form data and store it in the database using PL/SQL
         
         # redirect to a success page
-        return render_template('search_bug_result.html', result=search_result)
+        return render_template('search_bug_result.html', result=search_result, username=username, userlevel=userlevel,programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status)
     
     connection = pymysql.connect(**db_config)
     with connection.cursor() as cursor:
@@ -682,7 +734,22 @@ def search_bug():
     status=['Open', 'Closed', 'Resolved']
     resolution=['Pending', 'Fixed', 'Irreproducible', 'Deferred', 'As designed', 'Withdrawn by reporter', 'Need more info', 'Disagree with suggestion', 'Duplicate']
     resolution_version=[1,2,3,4]
-    return render_template('search_bug_page.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status)
+    return render_template('search_bug_page.html', programs=programs, report_types=report_types, severities=severities, employees=employees, areas=areas, resolution=resolution, resolution_version=resolution_version, priority=priority, status=status, username=username, userlevel=userlevel)
+
+@app.route("/view_attachment/<string:filename>")
+def view_attachment(filename):
+    connection = pymysql.connect(**db_config)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT attachment FROM bug WHERE filename = %s", (filename,))
+
+        data = cursor.fetchone()
+        print(data)
+        
+
+    return send_file(BytesIO(data['attachment']), attachment_filename=filename, as_attachment=True)
+
+
+
 
 # export data
 @app.route('/export_data', methods=['GET', 'POST'])

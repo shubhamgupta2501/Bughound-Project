@@ -89,7 +89,7 @@
                         <div class="modal-body">
             
 
-                          <form action="{{ url_for('edit_bug') }}" method="POST">
+                          <form action="{{ url_for('edit_bug') }}" enctype="multipart/form-data" method="POST">
             
                               <div class="form-group">
                                  
@@ -97,7 +97,7 @@
             
                                  <label for="program">Program:</label>
                                   <select id="program" name="program" class ="form-control">
-                                    <option disabled selected>Please select</option>
+                                    <option value="" disabled selected>Please select</option>
                                       {% for program in programs %}
                                         {% if program['program'] ==row['program'] %}
                                           <option value="{{ program['program'] }}" selected>{{ program['program'] }}</option>
@@ -113,7 +113,7 @@
                               <div class="form-group">
                                 <label for="report_type">Report Type:</label>
                                 <select id="report_type" name="report_type" class ="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                     {% for report_type in report_types %}
                                     {% if report_type ==row['report_type'] %}
                                     <option value="{{ report_type }}" selected>{{ report_type }}</option>
@@ -128,7 +128,7 @@
                                 <label for="severity">Severity:</label>
                     
                                 <select name="severity" id="severity" class ="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for severity in severities %}
                                   {% if severity ==row['severity'] %}
                                   <option value="{{ severity }}" selected>{{ severity }}</option>
@@ -148,7 +148,7 @@
                               <div class="form-group">
                                 <label for="reproducible">Reproducible:</label>
                                 <select name="reproducible" id="reproducible" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% if row['reproducible']=='Yes' %}
                                   <option value="Yes" selected>Yes</option>
                                   <option value="No" >No</option>
@@ -167,7 +167,7 @@
                               <div class="form-group">
                                 <label for="reported_by">Reported By:</label>
                                 <select name="reported_by" id="reported_by" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for employee in employees %}
                                    
                                     {% if  employee['name']==row['reported_by'] %}
@@ -188,7 +188,7 @@
                                 <label for="functional_area">Functional Area:</label>
                                 <select name="functional_area" id="functional_area" class="form-control">
                                   
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for area in areas %}
                                     
                                     {% if  area['area']==row['functional_area'] %}
@@ -204,7 +204,7 @@
                               <div class="form-group">
                                 <label for="assigned_to">Assigned To:</label>
                                 <select name="assigned_to" id="assigned_to" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for employee in employees %}
                                     {% if  employee['name']==row['assigned_to'] %}
                                       <option value="{{ employee['name'] }}" selected>{{ employee['name'] }}</option>
@@ -223,7 +223,7 @@
                               <div class="form-group">
                                 <label for="status">Status:</label>
                                 <select id="status" name="status" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for s in status %}
                                   {% if s==row['status'] %}
                                     <option value="{{ s }}" selected>{{ s }}</option>
@@ -238,7 +238,7 @@
                               <div class="form-group">
                                 <label for="priority">Priority:</label>
                                 <select id="priority" name="priority" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for p in priority %}
                                   {% if p==row['priority'] %}
                                     <option value="{{ p }}" selected>{{ p }}</option>
@@ -254,7 +254,7 @@
                               <div class="form-group">
                                 <label for="resolution">Resolution:</label>
                                 <select id="resolution" name="resolution" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for r in resolution %}
                                   {% if r==row['resolution'] %}
                                   <option value="{{ r }}" selected>{{ r }}</option>
@@ -268,7 +268,7 @@
                               <div class="form-group">
                                 <label for="resolution_version">Resolution  Version:</label>
                                 <select id="resolution_version" name="resolution_version" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for r in resolution_version %}
                                   {% if r==row['resolution_version'] %}
                                   <option value="{{ r }}" selected>{{ r }}</option>
@@ -283,7 +283,7 @@
                               <div class="form-group">
                                 <label for="resolution_by">Resolution  by:</label>
                                 <select id="resolution_by" name="resolution_by" class="form-control">
-                                  <option disabled selected>Please select</option>
+                                  <option value="" disabled selected>Please select</option>
                                   {% for employee in employees %}
                                     {% if  employee['name']==row['resolution_by'] %}
                                       <option value="{{ employee['name'] }}" selected>{{ employee['name'] }}</option>
@@ -303,7 +303,7 @@
                                 <div class="form-group">
                                   <label for="tested_by">Tested by:</label>
                                   <select id="tested_by" name="tested_by" class="form-control">
-                                    <option disabled selected>Please select</option>
+                                    <option value="" disabled selected>Please select</option>
                                     {% for employee in employees %}
                                       {% if  employee['name']==row['tested_by'] %}
                                         <option value="{{ employee['name'] }}" selected>{{ employee['name'] }}</option>
@@ -312,6 +312,14 @@
                                       {% endif %}
                                     {% endfor %}
                                   </select>
+                                </div>
+
+                                
+
+                                <div class="col-sm-12">
+                                  <label for="attachment">Update Attachment:</label><br> <a href="{{ url_for('view_attachment', filename=row['filename']) }}">{{ row['filename'] }}</a>
+
+                                  <input type="file" id="attachment" name="attachment"  class="form-control"><br><br>
                                 </div>
                            
                              
