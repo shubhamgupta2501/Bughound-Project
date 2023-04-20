@@ -303,6 +303,7 @@ def add_bug():
             area_id = cursor.fetchone()
         
             connection.commit()
+
             
             print("INSERT INTO bug (program, report_type, severity, problem_summary, reproducible, problem, reported_by, date_reported, functional_area, assigned_to, comments, status, priority, resolution, resolution_version, resolution_by,date_resolved, tested_by, prog_id, area_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (program, report_type, severity, 
                                             problem_summary, reproducible, problem, reported_by, 
@@ -315,6 +316,7 @@ def add_bug():
                                             status, priority, resolution, resolution_version, resolution_by,
                                             date_resolved, tested_by, prog_id['prog_id'], area_id['area_id']))
             connection.commit()
+            
             bug_id= cursor.lastrowid
             message = f"Bug with id {bug_id} was successfully added."
         
