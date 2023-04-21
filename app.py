@@ -249,7 +249,8 @@ def add_area():
             if result['COUNT(*)'] == 0:
                 message="Cannot add area - programs table is empty."
             else:
-                cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id["prog_id"]))
+                print(area, prog_id)
+                cursor.execute("INSERT INTO areas (area,prog_id) VALUES (%s, %s)", (area, prog_id))
                 connection.commit()
                 prog_id = cursor.lastrowid
                 message = f"Area {area} was successfully added."

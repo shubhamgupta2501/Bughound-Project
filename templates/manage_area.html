@@ -108,9 +108,9 @@
                                     <option disabled selected>Please select</option>
                                       {% for program in programs %}
                                         {% if program['prog_id'] ==row['prog_id'] %}
-                                          <option value="{{ program['prog_id'] }}" selected>{{ program['prog_id']}}</option>
+                                        <option value="{{ program['prog_id'] }}" selected>{{ program['program'] + ' ' + program['program_version'] + ' ' + program['program_release'] }}</option>
                                           {% else %}
-                                          <option value="{{ program['prog_id'] }}">{{ program['prog_id'] }}</option>
+                                          <option value="{{ program['prog_id'] }}" >{{ program['program'] + ' ' + program['program_version'] + ' ' + program['program_release'] }}</option>
                                       {% endif %}
                                       {% endfor %}
                                   </select>
@@ -184,7 +184,7 @@
                                     <option disabled selected>Please select</option>
                                       {% for program in programs %}
                                         
-                                          <option value="{{ program['prog_id'] }}">{{ program['prog_id'] }}</option>
+                                          <option value="{{ program['prog_id'] }}" >{{ program['program'] + ' ' + program['program_version'] + ' ' + program['program_release'] }}</option>
                                      
                                       {% endfor %}
                                   </select>
