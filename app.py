@@ -44,7 +44,7 @@ def login_auth():
             #return render_template('dashboard.html', condition = condition, username = username)   
             return redirect('/dashboard') 
         else:
-            message = f"Incorrect username or password"
+            message = "Incorrect username or password"
             flash(message=message)
             return redirect('/')
   
@@ -52,11 +52,11 @@ def login_auth():
 @app.route('/logout', methods=['POST','GET'])
 def logout():
     if "loggedin" in session:
-        message = f"You are Logged out Succesfully"
+        message = "You are Logged out Succesfully"
         flash(message=message)
         session.pop('loggedin', None)
     else:
-        message = f"You need to Login first"
+        message = "You need to Login first"
         flash(message=message)
     return redirect('/')
 '''
@@ -79,14 +79,14 @@ def dashboard():
     if "loggedin" in session:
          return render_template('dashboard.html', condition = condition, username=username, userlevel=userlevel)
     else:
-        message = f"You need to Login first"
+        message = "You need to Login first"
         flash(message=message)
         return render_template('login.html')
 
 @app.route('/insert', methods=['POST'])
 def insert():
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -111,7 +111,7 @@ def insert():
 @app.route('/edit', methods=['POST','GET'])
 def edit():
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -136,7 +136,7 @@ def edit():
 def delete(id_data):
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -154,7 +154,7 @@ def delete(id_data):
 def add_program():
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -176,7 +176,7 @@ def add_program():
 @app.route('/edit_program', methods=['POST','GET'])
 def edit_program():
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -201,7 +201,7 @@ def edit_program():
 def delete_program(id_data):
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -220,7 +220,7 @@ def delete_program(id_data):
 def add_area():
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -262,7 +262,7 @@ def add_area():
 @app.route('/edit_area', methods=['POST','GET'])
 def edit_area():
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -287,7 +287,7 @@ def edit_area():
 def delete_area(id_data):
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -309,7 +309,7 @@ def update_bug():
     userlevel =session['user_level']
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -348,7 +348,7 @@ def update_bug():
 def delete_bug(id_data):
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -368,7 +368,7 @@ def delete_bug(id_data):
 @app.route('/edit_bug', methods=['POST','GET'])
 def edit_bug():
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -439,7 +439,7 @@ def add_bug():
     username = session['username']
     userlevel =session['user_level']
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -542,7 +542,7 @@ def maintain_database():
     username = session['username']
     userlevel =session['user_level']
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -559,7 +559,7 @@ def manage_employee():
     username = session['username']
     userlevel =session['user_level']
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
      
@@ -582,7 +582,7 @@ def manage_program():
     username = session['username']
     userlevel =session['user_level']
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -604,7 +604,7 @@ def manage_area():
     username = session['username']
     userlevel =session['user_level']
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -625,7 +625,7 @@ def manage_area():
 @app.route('/update',methods=['POST','GET'])
 def update():
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
 
@@ -639,7 +639,7 @@ def search_bug():
     userlevel =session['user_level']
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
@@ -765,7 +765,7 @@ def view_attachment(filename):
 def export_data():
 
     if "loggedin" not in session:
-         message = f"You need to Login first"
+         message = "You need to Login first"
          flash(message=message)
          return render_template('login.html')
     
